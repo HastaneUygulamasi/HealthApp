@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { supabase } from "../../createClient"
+import React, { useState } from "react";
+import { supabase } from "../../createClient";
 import { useNavigate } from "react-router-dom";
-
 
 const SignInForm = () => {
 
@@ -9,10 +8,10 @@ const SignInForm = () => {
     mail: "",
     password: ""
   });
-  const [users, setUsers] = useState([]);
-  const [error , setError] = useState("")
-  const [errorMail , setErrorMail] = useState("");
-  const [errorPassword , setErrorPassword] = useState("");
+
+  const [error, setError] = useState("")
+  const [errorMail, setErrorMail] = useState("");
+  const [errorPassword, setErrorPassword] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -23,34 +22,48 @@ const SignInForm = () => {
     });
   };
 
-  useEffect(() => {
-    fetchUsers()
-  }, [])
+  /*  useEffect(() => {
+     fetchUsers()
+   }, [])
+ 
+   const fetchUsers = async () => {
+     const { data } = await supabase
+       .from('users')
+       .select("*")
+     setUsers(data)
+   } */
 
-  const fetchUsers = async () => {
-    const { data } = await supabase
-      .from('users')
-      .select("*")
-    setUsers(data)
-
-  }
-
-  const handleOnSubmit = (event) => {
+  const handleOnSubmit = async (event) => {
     event.preventDefault();
-    const {mail , password} = state;
-    if(mail === "") {
-      setErrorMail([])
-    } else if(mail) {
-      setErrorMail("")
+    const { mail, password } = state;
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: mail,
+        password: password
+      })
+
+      if (error) {
+        throw error;
+      }
+      navigate("/landing")
+    } catch (error) {
+      alert(error)
     }
 
-    if(password === ""){
+    if (mail === "") {
+      setErrorMail([])
+    } else if (mail) {
+      setErrorMail("")
+    }
+    if (password === "") {
       setErrorPassword([])
-    } else if(password) {
+    } else if (password) {
       setErrorPassword("")
     }
 
-    users.forEach((user) => {
+
+    /* users.forEach((user) => {
       if(mail === user.mail && password === user.password) {
         navigate("/landing")
       }else if(mail !== "" && password !== "") {
@@ -58,14 +71,9 @@ const SignInForm = () => {
           setError([])
         }
       }
-    })
-
-    /*users.map(user => {
-      if (mail === user.mail && password === user.password){
-        navigate("/landing");
-      }
     }) */
-    
+
+
   };
 
   return (
@@ -85,8 +93,8 @@ const SignInForm = () => {
           placeholder="password"
           onChange={handleChange}
         />
-        <label className={errorPassword ? "errorPassword" : "no-error-password"}>Please enter a password!</label> 
-        <label className={error ? "error" : "no-error"}>Incorrect email or password.</label> 
+        <label className={errorPassword ? "errorPassword" : "no-error-password"}>Please enter a password!</label>
+        <label className={error ? "error" : "no-error"}>Incorrect email or password.</label>
         <button>Sign In</button>
       </form>
     </div>

@@ -1,6 +1,5 @@
 import React from "react";
 import { supabase } from "../../createClient";
-import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
   const [state, setState] = React.useState({
@@ -9,7 +8,6 @@ const SignUpForm = () => {
     surname: "",
     password: ""
   });
-  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -20,18 +18,32 @@ const SignUpForm = () => {
   };
 
   const handleOnSubmit = async (event) => {
-
+    event.preventDefault();
     const { mail, name, surname, password } = state;
 
     if (!mail || !name || !surname || !password) {
       alert("Please fill in all the fields correctly!")
       return
     }
+    
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: mail,
+        password: password
+      })
+      setState({ mail: "", name: "", surname: "", password: "" });
+      if (error) {
+        setState({ mail: mail, name: name, surname: surname, password: password });
+        throw error;
+      }
+    } catch (error) {
+      alert(error)
+    }
 
-    const { data, error } = await supabase
+    /* await supabase
       .from('users')
       .insert([{ mail, name, surname, password }])
-      handleChange(event);
+    handleChange(event);
 
     if (error) {
       alert(error)
@@ -40,7 +52,7 @@ const SignUpForm = () => {
       alert("Successfully registered!");
       handleChange(event);
       navigate("/");
-    }
+    } */
   };
 
   return (
@@ -49,7 +61,7 @@ const SignUpForm = () => {
         <h1>Create Account</h1>
 
         <input
-          type="text"
+          type="email"
           name="mail"
           value={state.mail}
           onChange={handleChange}
