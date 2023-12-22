@@ -31,6 +31,9 @@ const SignUpForm = () => {
         email: mail,
         password: password
       })
+
+      await supabase.from('users').insert([{ mail, name, surname, password }])
+
       setState({ mail: "", name: "", surname: "", password: "" });
       if (error) {
         setState({ mail: mail, name: name, surname: surname, password: password });

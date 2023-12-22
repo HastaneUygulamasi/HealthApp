@@ -5,7 +5,7 @@ import "./css/userpagestyle.css";
 import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
-  /*
+  
   const navigate = useNavigate();
 
   const handleOnClick = async (event) => {
@@ -21,7 +21,7 @@ const UserPage = () => {
       alert(error)
     }
   }
-  */
+  
   return (
     <div>
       <h1>User Page</h1>
