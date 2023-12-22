@@ -25,16 +25,14 @@ const SignUpForm = () => {
       alert("Please fill in all the fields correctly!")
       return
     }
-    
+
     try {
-      const { error } = await supabase.auth.signUp({
-        email: mail,
-        password: password
-      })
+      const { error } = await supabase.auth.signUp({ email: mail, password: password });
 
       await supabase.from('users').insert([{ mail, name, surname, password }])
 
       setState({ mail: "", name: "", surname: "", password: "" });
+
       if (error) {
         setState({ mail: mail, name: name, surname: surname, password: password });
         throw error;
@@ -42,20 +40,6 @@ const SignUpForm = () => {
     } catch (error) {
       alert(error)
     }
-
-    /* await supabase
-      .from('users')
-      .insert([{ mail, name, surname, password }])
-    handleChange(event);
-
-    if (error) {
-      alert(error)
-    }
-    if (!data) {
-      alert("Successfully registered!");
-      handleChange(event);
-      navigate("/");
-    } */
   };
 
   return (
@@ -94,7 +78,7 @@ const SignUpForm = () => {
           onChange={handleChange}
           placeholder="password"
         />
-        <button>Sign Up</button>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from './components/login/Login';
-import UserPage from './components/UserPage'
+import UserPage from './components/UserPage';
+import AuthRoute from './context/AuthRoute';
 import { Routes, Route } from "react-router-dom";
 
 const App = () => {
@@ -8,8 +9,11 @@ const App = () => {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/landing' element={<UserPage />} />
+        <Route element={<AuthRoute />}>
+          <Route path="/" element={<UserPage />} />
+          <Route path="/home" element={<UserPage />} />
+        </Route>
+        <Route path='/login' element={<Login />} />
       </Routes>
     </>
   )

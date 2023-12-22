@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { supabase } from "../../createClient";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../../createClient";
 
 const SignInForm = () => {
 
@@ -22,31 +22,17 @@ const SignInForm = () => {
     });
   };
 
-  /*  useEffect(() => {
-     fetchUsers()
-   }, [])
- 
-   const fetchUsers = async () => {
-     const { data } = await supabase
-       .from('users')
-       .select("*")
-     setUsers(data)
-   } */
-
   const handleOnSubmit = async (event) => {
     event.preventDefault();
     const { mail, password } = state;
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: mail,
-        password: password
-      })
+      const { error } = await supabase.auth.signInWithPassword({ email: mail, password: password })
 
       if (error) {
         throw error;
       }
-      navigate("/landing")
+      navigate("/home")
     } catch (error) {
       alert(error)
     }
@@ -61,19 +47,6 @@ const SignInForm = () => {
     } else if (password) {
       setErrorPassword("")
     }
-
-
-    /* users.forEach((user) => {
-      if(mail === user.mail && password === user.password) {
-        navigate("/landing")
-      }else if(mail !== "" && password !== "") {
-         if(mail !== user.mail || password !== user.password){
-          setError([])
-        }
-      }
-    }) */
-
-
   };
 
   return (

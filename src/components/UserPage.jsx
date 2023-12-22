@@ -1,31 +1,28 @@
 import React from 'react';
-import {supabase} from "../createClient";
+import { useAuth } from '../context/AuthProvider';
 import "./css/userpagestyle.css";
 
-import { useNavigate } from "react-router-dom";
-
 const UserPage = () => {
-  
-  const navigate = useNavigate();
 
-  const handleOnClick = async (event) => {
+  const { user } = useAuth();
+  const { signOut } = useAuth();
+
+  const handleLogout = async (event) => {
     event.preventDefault();
+
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error){
-         throw error;
-      }else{
-        navigate("/");
-      }    
+      const { error } = await signOut();
+      console.log(error);
     } catch (error) {
-      alert(error)
+      console.log(error);
     }
   }
-  
+
   return (
     <div>
       <h1>User Page</h1>
-      <a onClick={handleOnClick}>Sign Out</a>
+      <p>You are logged in and your email address is {user.email}</p>
+      <button onClick={handleLogout}>Sign Out</button>
     </div>
   )
 }
